@@ -50,15 +50,20 @@ def main():
                 columns_info = [column[0] for column in cursor.fetchall()]
                 print()
                 print('What columns do you want to select? (comma-separated): ')
-                print(', '.join(columns_info))
+                for i, column in enumerate(columns_info, start=1):
+                    print(f'{i}: {column}')
                 print()
-                selected_columns = input('Enter column names: ')
-                
-                cursor.execute(f'SELECT {selected_columns} FROM {table_name}')
+                selected_column_numbers = input('Enter column numbers: ')
+
+                selected_columns = [columns_info[int(num) - 1] for num in selected_column_numbers.split(',')]
+
+                cursor.execute(f'SELECT {", ".join(selected_columns)} FROM {table_name}')
                 rows = cursor.fetchall()
+                os.system('clear')
                 for row in rows:
                     for i, column_value in enumerate(row):
-                        print(f'{columns_info[i]}: {column_value}')
+                        print(f'{selected_columns[i]}: {column_value}')
+                    print()
                 cursor.close()
             elif menu == '2':
                 print('What table do you want to insert into?: ')
